@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HisaabBook</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f0f4ff;
+  --white: #ffffff;
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --primary-light: #dbeafe;
+  --secondary: #f59e0b;
+  --secondary-light: #fef3c7;
+  --green: #10b981;
+  --green-light: #d1fae5;
+  --red: #ef4444;
+  --red-light: #fee2e2;
+  --text: #1e293b;
+  --text2: #475569;
+  --muted: #94a3b8;
+  --border: #e2e8f0;
+  --shadow: 0 4px 24px rgba(37,99,235,0.10);
+  --shadow2: 0 2px 8px rgba(0,0,0,0.08);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:'Poppins','Noto Sans Devanagari',sans-serif; min-height:100vh; }
+
+/* Nav */
+.nav { background:var(--primary); color:#fff; padding:0 16px; display:flex; align-items:center; justify-content:space-between; height:56px; box-shadow:0 2px 12px rgba(37,99,235,0.3); position:sticky; top:0; z-index:100; }
+.nav-brand { font-size:1.2rem; font-weight:800; letter-spacing:0.5px; display:flex; align-items:center; gap:8px; }
+.nav-brand span { background:var(--secondary); color:#fff; border-radius:6px; padding:2px 8px; font-size:0.75rem; font-weight:700; }
+.nav-tabs { display:flex; gap:2px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+.nav-tabs::-webkit-scrollbar { display:none; }
+.nav-tab { padding:5px 10px; border-radius:8px; cursor:pointer; font-size:0.72rem; font-weight:600; color:rgba(255,255,255,0.7); transition:all 0.2s; border:none; background:transparent; display:flex; flex-direction:column; align-items:center; gap:2px; line-height:1; }
+.nav-tab .tab-icon { font-size:1.2rem; }
+.nav-tab .tab-label { font-size:0.6rem; letter-spacing:0.2px; }
+.nav-tab.active { background:rgba(255,255,255,0.2); color:#fff; }
+.nav-tab:hover { background:rgba(255,255,255,0.15); color:#fff; }
+
+/* Pages */
+.page { display:none; padding:16px; max-width:960px; margin:0 auto; animation:fadeIn 0.3s ease; }
+.page.active { display:block; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(8px)} to{opacity:1;transform:translateY(0)} }
+
+/* Cards */
+.card { background:var(--white); border-radius:16px; padding:20px; margin-bottom:16px; box-shadow:var(--shadow2); border:1px solid var(--border); }
+.card-title { font-size:0.85rem; font-weight:700; color:var(--primary); text-transform:uppercase; letter-spacing:1px; margin-bottom:14px; display:flex; align-items:center; gap:7px; }
+
+/* Dashboard stats */
+.stats-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-bottom:16px; }
+.stat-card { background:var(--white); border-radius:14px; padding:16px; box-shadow:var(--shadow2); border:1px solid var(--border); }
+.stat-val { font-size:1.6rem; font-weight:800; color:var(--primary); }
+.stat-label { font-size:0.75rem; color:var(--muted); margin-top:2px; }
+.stat-card.green .stat-val { color:var(--green); }
+.stat-card.orange .stat-val { color:var(--secondary); }
+.stat-card.red .stat-val { color:var(--red); }
+
+/* Form elements */
+input, select, textarea {
+  width:100%; background:var(--bg); border:1.5px solid var(--border);
+  border-radius:10px; color:var(--text); font-family:'Poppins',sans-serif;
+  font-size:0.92rem; padding:10px 13px; outline:none; transition:all 0.2s;
+}
+input:focus, select:focus, textarea:focus { border-color:var(--primary); box-shadow:0 0 0 3px rgba(37,99,235,0.1); background:#fff; }
+input::placeholder, textarea::placeholder { color:var(--muted); }
+textarea { resize:vertical; min-height:70px; line-height:1.5; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px; }
+.form-row.three { grid-template-columns:1fr 1fr 1fr; }
+.form-group { margin-bottom:10px; }
+.form-group label { font-size:0.76rem; font-weight:600; color:var(--text2); display:block; margin-bottom:5px; }
+
+/* Buttons */
+.btn { padding:10px 18px; border:none; border-radius:10px; font-family:'Poppins',sans-serif; font-size:0.9rem; font-weight:700; cursor:pointer; transition:all 0.2s; display:inline-flex; align-items:center; gap:6px; }
+.btn-primary { background:var(--primary); color:#fff; }
+.btn-primary:hover { background:var(--primary-dark); transform:translateY(-1px); box-shadow:0 4px 12px rgba(37,99,235,0.3); }
+.btn-green { background:var(--green); color:#fff; }
+.btn-green:hover { background:#059669; transform:translateY(-1px); }
+.btn-orange { background:var(--secondary); color:#fff; }
+.btn-orange:hover { background:#d97706; }
+.btn-red { background:var(--red); color:#fff; }
+.btn-red:hover { background:#dc2626; }
+.btn-outline { background:transparent; border:1.5px solid var(--border); color:var(--text2); }
+.btn-outline:hover { border-color:var(--primary); color:var(--primary); }
+.btn-sm { padding:6px 12px; font-size:0.8rem; }
+.btn-full { width:100%; justify-content:center; padding:13px; font-size:1rem; }
+.btn-whatsapp { background:#25d366; color:#fff; }
+.btn-whatsapp:hover { background:#22c55e; }
+.btn-sms { background:#6366f1; color:#fff; }
+.btn-sms:hover { background:#4f46e5; }
+
+/* Bill items table */
+.items-table { width:100%; border-collapse:collapse; font-size:0.85rem; }
+.items-table th { background:var(--primary-light); color:var(--primary); padding:8px 10px; text-align:left; font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; }
+.items-table th:first-child { border-radius:8px 0 0 8px; }
+.items-table th:last-child { border-radius:0 8px 8px 0; }
+.items-table td { padding:8px 10px; border-bottom:1px solid var(--border); vertical-align:middle; }
+.items-table tr:last-child td { border-bottom:none; }
+.items-table input { padding:6px 8px; font-size:0.85rem; }
+
+/* Bill preview */
+.bill-preview { background:#fff; border:2px solid var(--border); border-radius:12px; padding:20px; font-size:0.88rem; }
+.bill-header { text-align:center; margin-bottom:16px; padding-bottom:14px; border-bottom:2px dashed var(--border); }
+.bill-shop-name { font-size:1.4rem; font-weight:800; color:var(--primary); }
+.bill-shop-sub { font-size:0.8rem; color:var(--text2); margin-top:2px; }
+.bill-promo { background:linear-gradient(135deg,var(--primary),#3b82f6); color:#fff; border-radius:8px; padding:8px 12px; margin:10px 0; font-size:0.8rem; text-align:center; }
+.bill-customer { display:flex; justify-content:space-between; margin:12px 0; font-size:0.83rem; color:var(--text2); }
+.bill-divider { border:none; border-top:1.5px dashed var(--border); margin:12px 0; }
+.bill-total-row { display:flex; justify-content:space-between; padding:4px 0; font-size:0.85rem; }
+.bill-total-row.grand { font-weight:800; font-size:1rem; color:var(--primary); border-top:2px solid var(--primary); padding-top:8px; margin-top:4px; }
+.bill-footer { text-align:center; margin-top:14px; padding-top:12px; border-top:2px dashed var(--border); font-size:0.78rem; color:var(--muted); }
+
+/* Inventory table */
+.inv-table { width:100%; border-collapse:collapse; font-size:0.85rem; }
+.inv-table th { background:var(--primary-light); color:var(--primary); padding:9px 12px; text-align:left; font-size:0.75rem; font-weight:700; text-transform:uppercase; }
+.inv-table td { padding:9px 12px; border-bottom:1px solid var(--border); }
+.inv-table tr:hover td { background:var(--bg); }
+.badge { display:inline-block; padding:2px 8px; border-radius:20px; font-size:0.72rem; font-weight:600; }
+.badge-green { background:var(--green-light); color:var(--green); }
+.badge-red { background:var(--red-light); color:var(--red); }
+.badge-orange { background:var(--secondary-light); color:var(--secondary); }
+
+/* Customer table */
+.cust-item { display:flex; align-items:center; justify-content:space-between; padding:11px 14px; background:var(--bg); border-radius:10px; margin-bottom:8px; border:1px solid var(--border); }
+.cust-name { font-weight:600; font-size:0.92rem; }
+.cust-meta { font-size:0.75rem; color:var(--muted); margin-top:2px; }
+.cust-actions { display:flex; gap:6px; }
+
+/* Promotion */
+.promo-preview { background:linear-gradient(135deg,#1e40af,#3b82f6,#06b6d4); color:#fff; border-radius:14px; padding:20px; text-align:center; margin-bottom:14px; }
+.promo-title { font-size:1.3rem; font-weight:800; margin-bottom:6px; }
+.promo-sub { font-size:0.85rem; opacity:0.9; }
+.promo-offer { background:rgba(255,255,255,0.2); border-radius:8px; padding:8px 16px; display:inline-block; margin-top:10px; font-weight:700; font-size:1rem; }
+
+/* History */
+.history-item { padding:12px 14px; background:var(--bg); border-radius:10px; margin-bottom:8px; border:1px solid var(--border); cursor:pointer; transition:all 0.2s; }
+.history-item:hover { border-color:var(--primary); }
+.history-top { display:flex; justify-content:space-between; align-items:center; }
+.history-name { font-weight:600; font-size:0.9rem; }
+.history-amount { font-weight:700; color:var(--green); }
+.history-meta { font-size:0.75rem; color:var(--muted); margin-top:3px; }
+
+/* Msg buttons row */
+.msg-row { display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+
+/* Modal */
+.modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:200; align-items:center; justify-content:center; padding:16px; }
+.modal-bg.open { display:flex; }
+.modal { background:#fff; border-radius:18px; padding:22px; width:100%; max-width:500px; max-height:90vh; overflow-y:auto; animation:fadeIn 0.25s ease; }
+.modal-title { font-size:1rem; font-weight:700; margin-bottom:16px; color:var(--primary); }
+.modal-close { float:right; background:none; border:none; font-size:1.3rem; cursor:pointer; color:var(--muted); margin-top:-4px; }
+
+/* Shop settings */
+.settings-saved { background:var(--green-light); color:var(--green); padding:10px 14px; border-radius:10px; font-size:0.85rem; font-weight:600; display:none; margin-top:10px; }
+
+/* Responsive */
+@media(max-width:580px) {
+  .form-row,.form-row.three { grid-template-columns:1fr; }
+  .stats-grid { grid-template-columns:1fr 1fr; }
+  .nav-tab { padding:5px 8px; font-size:0.72rem; }
+  .bill-shop-name { font-size:1.1rem; }
+}
+
+.divider { height:1px; background:var(--border); margin:14px 0; }
+.text-center { text-align:center; }
+.text-right { text-align:right; }
+.mt-10 { margin-top:10px; }
+.flex-between { display:flex; justify-content:space-between; align-items:center; }
+.gap-8 { gap:8px; }
+.empty-state { text-align:center; padding:30px; color:var(--muted); font-size:0.88rem; }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<div class="nav">
+  <div class="nav-brand">📒 HisaabBook</div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="goPage('dashboard')">🏠</button>
+    <button class="nav-tab" onclick="goPage('bill')">🧾 Bill</button>
+    <button class="nav-tab" onclick="goPage('inventory')">📦 Stock</button>
+    <button class="nav-tab" onclick="goPage('customers')">👥 Grahak</button>
+    <button class="nav-tab" onclick="goPage('promo')">📣 Promo</button>
+    <button class="nav-tab" onclick="goPage('udhar')">📒 Udhar</button>
+    <button class="nav-tab" onclick="goPage('settings')">&#x2699; Setting</button>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="page active" id="page-dashboard">
+  <div style="padding:4px 0 12px;font-size:1rem;font-weight:700;color:var(--text2)" id="dashGreet">नमस्ते! 👋</div>
+  <div class="stats-grid">
+    <div class="stat-card"><div class="stat-val" id="d-bills">0</div><div class="stat-label">आज के Bill</div></div>
+    <div class="stat-card green"><div class="stat-val" id="d-sales">₹0</div><div class="stat-label">आज की Sale</div></div>
+    <div class="stat-card orange"><div class="stat-val" id="d-customers">0</div><div class="stat-label">Total Customers</div></div>
+    <div class="stat-card red"><div class="stat-val" id="d-lowstock">0</div><div class="stat-label">Low Stock Items</div></div>
+    <div class="stat-card red" style="grid-column:span 2"><div class="stat-val" id="d-udhar">₹0</div><div class="stat-label">⚠️ कुल उधार बाकी (Total Pending)</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">⚡ Quick Actions</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <button class="btn btn-primary btn-full" onclick="goPage('bill')">🧾 नया Bill बनाओ</button>
+      <button class="btn btn-green btn-full" onclick="goPage('inventory')">📦 Stock Add करो</button>
+      <button class="btn btn-orange btn-full" onclick="goPage('customers')">👥 Customer देखो</button>
+      <button class="btn btn-sms btn-full" onclick="goPage('promo')">📣 Promotion भेजो</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🕐 Recent Bills</div>
+    <div id="recent-bills"><div class="empty-state">अभी कोई bill नहीं बना</div></div>
+  </div>
+</div>
+
+<!-- BILL PAGE -->
+<div class="page" id="page-bill">
+  <div class="card">
+    <div class="card-title">👤 Customer Details</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Customer का नाम</label>
+        <input type="text" id="b-name" placeholder="जैसे: Ramesh Kumar" />
+      </div>
+      <div class="form-group">
+        <label>Mobile Number</label>
+        <input type="tel" id="b-phone" placeholder="9XXXXXXXXX" maxlength="10" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Bill Number</label>
+        <input type="text" id="b-billno" placeholder="Auto" readonly style="background:#f8fafc;color:var(--muted)" />
+      </div>
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" id="b-date" />
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🛒 Items</div>
+    <div style="overflow-x:auto">
+      <table class="items-table">
+        <thead>
+          <tr>
+            <th>Item का नाम</th>
+            <th style="width:80px">Qty</th>
+            <th style="width:100px">Price (₹)</th>
+            <th style="width:90px">Total</th>
+            <th style="width:40px"></th>
+          </tr>
+        </thead>
+        <tbody id="items-body"></tbody>
+      </table>
+    </div>
+    <button class="btn btn-outline btn-sm mt-10" onclick="addItemRow()">+ Item जोड़ो</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title">💰 Amount</div>
+    <div style="max-width:320px;margin-left:auto">
+      <div class="bill-total-row"><span>Subtotal</span><span id="s-subtotal">₹0</span></div>
+      <div class="bill-total-row">
+        <span>Discount (%)</span>
+        <input type="number" id="b-discount" value="0" min="0" max="100" style="width:80px;padding:4px 8px;font-size:0.85rem" oninput="calcTotal()" />
+      </div>
+      <div class="bill-total-row">
+        <span>GST (%)</span>
+        <input type="number" id="b-gst" value="0" min="0" style="width:80px;padding:4px 8px;font-size:0.85rem" oninput="calcTotal()" />
+      </div>
+      <div class="bill-total-row grand"><span>Grand Total</span><span id="s-total">₹0</span></div>
+    </div>
+
+    <div class="form-group mt-10">
+      <label>Payment Mode</label>
+      <select id="b-payment" onchange="toggleUdharFields()">
+        <option value="Cash">💵 नगद (Cash)</option>
+        <option value="UPI">📱 UPI</option>
+        <option value="Card">💳 Card</option>
+        <option value="Partial">🔀 आंशिक भुगतान (Partial)</option>
+        <option value="Udhar">📒 उधार (Credit)</option>
+      </select>
+    </div>
+    <!-- Partial payment fields -->
+    <div id="partial-fields" style="display:none">
+      <div class="form-row" style="margin-top:8px">
+        <div class="form-group">
+          <label>अभी दिए (Paid Now ₹)</label>
+          <input type="number" id="b-paid" placeholder="0" min="0" oninput="calcPartial()" />
+        </div>
+        <div class="form-group">
+          <label>बाकी उधार (Remaining)</label>
+          <input type="number" id="b-remaining" placeholder="0" readonly style="background:#fff0f0;color:var(--red);font-weight:700" />
+        </div>
+      </div>
+    </div>
+    <!-- Udhar fields -->
+    <div id="udhar-fields" style="display:none">
+      <div class="form-row" style="margin-top:8px">
+        <div class="form-group">
+          <label>वापसी की तारीख (Due Date)</label>
+          <input type="date" id="b-duedate" />
+        </div>
+        <div class="form-group">
+          <label>उधार Note</label>
+          <input type="text" id="b-udharnote" placeholder="जैसे: महीने के अंत में देंगे" />
+        </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Notes (optional)</label>
+      <textarea id="b-notes" placeholder="कोई note..." style="min-height:50px"></textarea>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px">
+      <button class="btn btn-primary btn-full" onclick="generateBill()">🧾 Bill बनाओ</button>
+      <button class="btn btn-outline btn-full" onclick="clearBill()">🗑️ Clear</button>
+    </div>
+  </div>
+
+  <!-- Bill Preview -->
+  <div class="card" id="bill-preview-card" style="display:none">
+    <div class="card-title">👁️ Bill Preview</div>
+    <div class="bill-preview" id="bill-preview-content"></div>
+    <div class="msg-row">
+      <button class="btn btn-whatsapp" onclick="sendWhatsApp()">📱 WhatsApp भेजो</button>
+      <button class="btn btn-sms" onclick="sendSMS()">💬 SMS भेजो</button>
+      <button class="btn btn-outline" onclick="printBill()">🖨️ Print</button>
+    </div>
+  </div>
+</div>
+
+<!-- INVENTORY PAGE -->
+<div class="page" id="page-inventory">
+  <div class="card">
+    <div class="card-title">➕ Stock Add करो</div>
+    <div class="form-row three">
+      <div class="form-group">
+        <label>Item का नाम</label>
+        <input type="text" id="i-name" placeholder="जैसे: Sugar 1kg" />
+      </div>
+      <div class="form-group">
+        <label>Category</label>
+        <select id="i-cat">
+          <option>General</option><option>Grocery</option><option>Electronics</option>
+          <option>Clothing</option><option>Medicine</option><option>Stationery</option><option>Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Unit</label>
+        <select id="i-unit">
+          <option>Piece</option><option>Kg</option><option>Gram</option>
+          <option>Litre</option><option>Dozen</option><option>Box</option><option>Packet</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row three">
+      <div class="form-group">
+        <label>Quantity (Stock)</label>
+        <input type="number" id="i-qty" placeholder="0" min="0" />
+      </div>
+      <div class="form-group">
+        <label>Selling Price (₹)</label>
+        <input type="number" id="i-price" placeholder="0" min="0" />
+      </div>
+      <div class="form-group">
+        <label>Low Stock Alert</label>
+        <input type="number" id="i-alert" placeholder="5" min="0" />
+      </div>
+    </div>
+    <button class="btn btn-green" onclick="addInventory()">✅ Stock Save करो</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title flex-between">
+      <span>📦 Current Stock</span>
+      <input type="text" id="inv-search" placeholder="Search..." style="width:160px;padding:6px 10px;font-size:0.82rem" oninput="renderInventory()" />
+    </div>
+    <div style="overflow-x:auto">
+      <table class="inv-table">
+        <thead>
+          <tr>
+            <th>Item</th><th>Category</th><th>Qty</th><th>Price</th><th>Status</th><th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="inv-body"><tr><td colspan="6" class="empty-state">कोई item नहीं</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- CUSTOMERS PAGE -->
+<div class="page" id="page-customers">
+  <div class="card">
+    <div class="card-title">👤 Customer Add करो</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>नाम</label>
+        <input type="text" id="c-name" placeholder="Customer का नाम" />
+      </div>
+      <div class="form-group">
+        <label>Mobile Number</label>
+        <input type="tel" id="c-phone" placeholder="9XXXXXXXXX" maxlength="10" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Address (Optional)</label>
+        <input type="text" id="c-address" placeholder="गली/मोहल्ला..." />
+      </div>
+      <div class="form-group">
+        <label>Birthday (Optional)</label>
+        <input type="date" id="c-bday" />
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="addCustomer()">✅ Customer Save करो</button>
+  </div>
+
+  <div class="card">
+    <div class="card-title flex-between">
+      <span>👥 All Customers (<span id="cust-count">0</span>)</span>
+      <input type="text" id="cust-search" placeholder="Search..." style="width:150px;padding:6px 10px;font-size:0.82rem" oninput="renderCustomers()" />
+    </div>
+    <div id="cust-list"><div class="empty-state">कोई customer नहीं</div></div>
+  </div>
+</div>
+
+<!-- PROMOTION PAGE -->
+<div class="page" id="page-promo">
+  <div class="card">
+    <div class="card-title">🎨 Promotion बनाओ</div>
+
+    <div class="form-group">
+      <label>Promotion Title</label>
+      <input type="text" id="p-title" placeholder="जैसे: Diwali Sale 🎉" oninput="updatePromoPreview()" />
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Offer Details</label>
+        <input type="text" id="p-offer" placeholder="जैसे: 20% OFF सभी items पर" oninput="updatePromoPreview()" />
+      </div>
+      <div class="form-group">
+        <label>Valid Till</label>
+        <input type="date" id="p-valid" oninput="updatePromoPreview()" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Extra Message (Optional)</label>
+      <textarea id="p-extra" placeholder="जैसे: जल्दी आओ, Limited Stock!" style="min-height:55px" oninput="updatePromoPreview()"></textarea>
+    </div>
+  </div>
+
+  <!-- Preview -->
+  <div class="promo-preview" id="promo-preview">
+    <div class="promo-title" id="pp-title">🏪 आपकी दुकान</div>
+    <div class="promo-sub" id="pp-sub">Special Offer आपके लिए!</div>
+    <div class="promo-offer" id="pp-offer">20% OFF 🎉</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📤 किसे भेजना है?</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px;background:var(--bg);border-radius:10px;border:1.5px solid var(--border)">
+        <input type="radio" name="promo-to" value="all" checked style="width:auto"> सभी Customers को
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;padding:10px;background:var(--bg);border-radius:10px;border:1.5px solid var(--border)">
+        <input type="radio" name="promo-to" value="single" style="width:auto"> एक Number पर
+      </label>
+    </div>
+    <div class="form-group" id="single-num-box" style="display:none">
+      <label>Mobile Number</label>
+      <input type="tel" id="p-singlenum" placeholder="9XXXXXXXXX" maxlength="10" />
+    </div>
+    <div class="msg-row">
+      <button class="btn btn-whatsapp" onclick="sendPromoWA()">📱 WhatsApp Promo भेजो</button>
+      <button class="btn btn-sms" onclick="sendPromoSMS()">💬 SMS Promo भेजो</button>
+    </div>
+    <div style="font-size:0.75rem;color:var(--muted);margin-top:8px">* WhatsApp/SMS link खुलेगा — send करना होगा</div>
+  </div>
+</div>
+
+<!-- UDHAR PAGE -->
+<div class="page" id="page-udhar">
+  <div class="stats-grid" style="margin-bottom:16px">
+    <div class="stat-card red"><div class="stat-val" id="u-total">₹0</div><div class="stat-label">कुल उधार बाकी</div></div>
+    <div class="stat-card orange"><div class="stat-val" id="u-count">0</div><div class="stat-label">उधारदार लोग</div></div>
+    <div class="stat-card green"><div class="stat-val" id="u-recovered">₹0</div><div class="stat-label">वापस आए पैसे</div></div>
+    <div class="stat-card"><div class="stat-val" id="u-overdue">0</div><div class="stat-label">⚠️ Due Date निकली</div></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📒 उधार बही — Pending List</div>
+    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+      <input type="text" id="udhar-search" placeholder="नाम से ढूंढो..." style="flex:1;min-width:140px;padding:8px 12px;font-size:0.85rem" oninput="renderUdhar()" />
+      <select id="udhar-filter" style="padding:8px 12px;font-size:0.85rem" onchange="renderUdhar()">
+        <option value="all">सब दिखाओ</option>
+        <option value="pending">Pending</option>
+        <option value="overdue">Overdue</option>
+        <option value="paid">चुका दिया</option>
+      </select>
+    </div>
+    <div id="udhar-list"><div class="empty-state">कोई उधार नहीं 🎉</div></div>
+  </div>
+
+  <!-- Manual udhar add -->
+  <div class="card">
+    <div class="card-title">➕ उधार manually जोड़ो</div>
+    <div class="form-row">
+      <div class="form-group"><label>Customer का नाम</label><input type="text" id="ua-name" placeholder="नाम" /></div>
+      <div class="form-group"><label>Mobile Number</label><input type="tel" id="ua-phone" placeholder="9XXXXXXXXX" maxlength="10" /></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>उधार Amount (₹)</label><input type="number" id="ua-amount" placeholder="0" /></div>
+      <div class="form-group"><label>Due Date</label><input type="date" id="ua-due" /></div>
+    </div>
+    <div class="form-group"><label>Note</label><input type="text" id="ua-note" placeholder="किस चीज़ का उधार..." /></div>
+    <button class="btn btn-red" onclick="addManualUdhar()">📒 उधार Add करो</button>
+  </div>
+</div>
+
+<!-- SETTINGS PAGE -->
+<div class="page" id="page-settings">
+  <div class="card">
+    <div class="card-title">🏪 Shop Details</div>
+    <div class="form-group"><label>दुकान का नाम</label><input type="text" id="s-shopname" placeholder="जैसे: Ramesh General Store" /></div>
+    <div class="form-row">
+      <div class="form-group"><label>Owner का नाम</label><input type="text" id="s-owner" placeholder="Ramesh Kumar" /></div>
+      <div class="form-group"><label>Mobile Number</label><input type="tel" id="s-phone" placeholder="9XXXXXXXXX" maxlength="10" /></div>
+    </div>
+    <div class="form-group"><label>Address</label><textarea id="s-address" placeholder="दुकान का पूरा पता..." style="min-height:55px"></textarea></div>
+    <div class="form-row">
+      <div class="form-group"><label>GST Number (Optional)</label><input type="text" id="s-gst" placeholder="GST Number" /></div>
+      <div class="form-group"><label>UPI ID (Optional)</label><input type="text" id="s-upi" placeholder="name@upi" /></div>
+    </div>
+    <div class="form-group"><label>Thank You Message (Bill के नीचे)</label><input type="text" id="s-thanks" placeholder="धन्यवाद! फिर आइएगा 🙏" /></div>
+    <div class="form-group"><label>Promotion Tag Line</label><input type="text" id="s-promo-tag" placeholder="जैसे: Best Quality, Best Price!" /></div>
+    <button class="btn btn-primary" onclick="saveSettings()">💾 Settings Save करो</button>
+    <div class="settings-saved" id="settings-ok">✅ Settings save हो गई!</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📊 Bill History</div>
+    <div id="bill-history-list"><div class="empty-state">कोई bill नहीं</div></div>
+  </div>
+</div>
+
+<!-- Modal for Customer Detail -->
+<div class="modal-bg" id="cust-modal">
+  <div class="modal">
+    <div class="flex-between"><div class="modal-title" id="modal-cust-name">Customer</div><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div id="modal-cust-body"></div>
+  </div>
+</div>
+
+<script>
+// ---- STATE ----
+let shop = JSON.parse(localStorage.getItem('shop_info') || '{}');
+let inventory = JSON.parse(localStorage.getItem('shop_inv') || '[]');
+let customers = JSON.parse(localStorage.getItem('shop_custs') || '[]');
+let bills = JSON.parse(localStorage.getItem('shop_bills') || '[]');
+let udhars = JSON.parse(localStorage.getItem('shop_udhars') || '[]');
+let billItems = [];
+let currentBill = null;
+
+// ---- INIT ----
+window.onload = () => {
+  loadSettings();
+  renderDashboard();
+  renderInventory();
+  renderCustomers();
+  renderBillHistory();
+  initBill();
+  updatePromoPreview();
+  renderUdhar();
+  document.getElementById('b-date').value = today();
+  document.querySelectorAll('input[name="promo-to"]').forEach(r => {
+    r.addEventListener('change', () => {
+      document.getElementById('single-num-box').style.display = r.value === 'single' ? 'block' : 'none';
+    });
+  });
+};
+
+function today() {
+  return new Date().toISOString().split('T')[0];
+}
+
+// ---- NAVIGATION ----
+function goPage(p) {
+  document.querySelectorAll('.page').forEach(x => x.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(x => x.classList.remove('active'));
+  document.getElementById('page-' + p).classList.add('active');
+  const tabs = ['dashboard','bill','inventory','customers','promo','udhar','settings'];
+  const idx = tabs.indexOf(p);
+  if(idx >= 0) document.querySelectorAll('.nav-tab')[idx].classList.add('active');
+  if(p==='dashboard') renderDashboard();
+  if(p==='inventory') renderInventory();
+  if(p==='customers') renderCustomers();
+  if(p==='udhar') renderUdhar();
+}
+
+// ---- SETTINGS ----
+function saveSettings() {
+  shop = {
+    name: document.getElementById('s-shopname').value.trim() || 'मेरी दुकान',
+    owner: document.getElementById('s-owner').value.trim(),
+    phone: document.getElementById('s-phone').value.trim(),
+    address: document.getElementById('s-address').value.trim(),
+    gst: document.getElementById('s-gst').value.trim(),
+    upi: document.getElementById('s-upi').value.trim(),
+    thanks: document.getElementById('s-thanks').value.trim() || 'धन्यवाद! फिर आइएगा 🙏',
+    promoTag: document.getElementById('s-promo-tag').value.trim()
+  };
+  localStorage.setItem('shop_info', JSON.stringify(shop));
+  document.getElementById('settings-ok').style.display = 'block';
+  setTimeout(() => document.getElementById('settings-ok').style.display = 'none', 2500);
+  updatePromoPreview();
+  renderDashboard();
+}
+function loadSettings() {
+  if(!shop.name) return;
+  document.getElementById('s-shopname').value = shop.name || '';
+  document.getElementById('s-owner').value = shop.owner || '';
+  document.getElementById('s-phone').value = shop.phone || '';
+  document.getElementById('s-address').value = shop.address || '';
+  document.getElementById('s-gst').value = shop.gst || '';
+  document.getElementById('s-upi').value = shop.upi || '';
+  document.getElementById('s-thanks').value = shop.thanks || '';
+  document.getElementById('s-promo-tag').value = shop.promoTag || '';
+}
+
+// ---- DASHBOARD ----
+function renderDashboard() {
+  const shopName = shop.name || 'आपकी दुकान';
+  document.getElementById('dashGreet').innerHTML = `नमस्ते, <b>${shop.owner || 'दुकानदार'} जी</b>! 👋 — ${shopName}`;
+  const todayStr = today();
+  const todayBills = bills.filter(b => b.date === todayStr);
+  const todaySale = todayBills.reduce((s,b) => s + b.total, 0);
+  const lowStock = inventory.filter(i => i.qty <= (i.alert || 5)).length;
+  document.getElementById('d-bills').textContent = todayBills.length;
+  document.getElementById('d-sales').textContent = '₹' + todaySale.toLocaleString('hi-IN');
+  document.getElementById('d-customers').textContent = customers.length;
+  document.getElementById('d-lowstock').textContent = lowStock;
+  const pendingUdhar = udhars.filter(u=>u.status==='pending').reduce((s,u)=>s+(u.remaining||u.amount),0);
+  document.getElementById('d-udhar').textContent = '₹' + pendingUdhar.toLocaleString('hi-IN');
+  const rb = document.getElementById('recent-bills');
+  if(!bills.length) { rb.innerHTML = '<div class="empty-state">अभी कोई bill नहीं</div>'; return; }
+  const recent = [...bills].reverse().slice(0,5);
+  rb.innerHTML = recent.map(b => `
+    <div class="history-item">
+      <div class="history-top"><span class="history-name">${b.customer}</span><span class="history-amount">₹${b.total.toLocaleString('hi-IN')}</span></div>
+      <div class="history-meta">Bill #${b.billno} • ${b.date} • ${b.payment} • ${b.items} items</div>
+    </div>
+  `).join('');
+}
+
+// ---- BILL ----
+function initBill() {
+  billItems = [];
+  const billNo = 'B' + String(bills.length + 1).padStart(4, '0');
+  document.getElementById('b-billno').value = billNo;
+  addItemRow(); addItemRow();
+  calcTotal();
+}
+function addItemRow() {
+  billItems.push({ name:'', qty:1, price:0 });
+  renderItemRows();
+}
+function renderItemRows() {
+  const tbody = document.getElementById('items-body');
+  // Get inventory suggestions
+  const invNames = inventory.map(i => i.name);
+  tbody.innerHTML = billItems.map((item, idx) => `
+    <tr>
+      <td>
+        <input type="text" list="inv-list-${idx}" value="${item.name}" placeholder="Item का नाम" oninput="updateItem(${idx},'name',this.value)" />
+        <datalist id="inv-list-${idx}">${invNames.map(n=>`<option value="${n}">`).join('')}</datalist>
+      </td>
+      <td><input type="number" value="${item.qty}" min="1" style="width:70px" oninput="updateItem(${idx},'qty',this.value)" /></td>
+      <td><input type="number" value="${item.price}" min="0" placeholder="0" oninput="updateItem(${idx},'price',this.value)" /></td>
+      <td style="font-weight:600;color:var(--primary)">₹${(item.qty * item.price).toFixed(0)}</td>
+      <td><button onclick="removeItem(${idx})" style="background:none;border:none;cursor:pointer;color:var(--red);font-size:1rem">✕</button></td>
+    </tr>
+  `).join('');
+  calcTotal();
+}
+function updateItem(idx, field, val) {
+  if(field === 'qty' || field === 'price') billItems[idx][field] = parseFloat(val)||0;
+  else billItems[idx][field] = val;
+  // Auto-fill price from inventory
+  if(field === 'name') {
+    const found = inventory.find(i => i.name.toLowerCase() === val.toLowerCase());
+    if(found) { billItems[idx].price = found.price; renderItemRows(); return; }
+  }
+  calcTotal();
+  // Update totals in cells
+  const rows = document.getElementById('items-body').rows;
+  if(rows[idx]) {
+    const total = billItems[idx].qty * billItems[idx].price;
+    rows[idx].cells[3].innerHTML = `<span style="font-weight:600;color:var(--primary)">₹${total.toFixed(0)}</span>`;
+  }
+}
+function removeItem(idx) {
+  if(billItems.length <= 1) return;
+  billItems.splice(idx,1);
+  renderItemRows();
+}
+function calcTotal() {
+  const subtotal = billItems.reduce((s,i) => s + (i.qty * i.price), 0);
+  const disc = parseFloat(document.getElementById('b-discount')?.value||0);
+  const gst = parseFloat(document.getElementById('b-gst')?.value||0);
+  const afterDisc = subtotal - (subtotal * disc / 100);
+  const total = afterDisc + (afterDisc * gst / 100);
+  document.getElementById('s-subtotal').textContent = '₹' + subtotal.toFixed(0);
+  document.getElementById('s-total').textContent = '₹' + total.toFixed(0);
+  return { subtotal, total: Math.round(total), disc, gst };
+}
+function generateBill() {
+  const name = document.getElementById('b-name').value.trim();
+  const phone = document.getElementById('b-phone').value.trim();
+  const date = document.getElementById('b-date').value;
+  const billno = document.getElementById('b-billno').value;
+  const payment = document.getElementById('b-payment').value;
+  const notes = document.getElementById('b-notes').value.trim();
+  const validItems = billItems.filter(i => i.name && i.price > 0);
+  if(!name) { alert('Customer का नाम डालो!'); return; }
+  if(!validItems.length) { alert('कम से कम एक item डालो!'); return; }
+  const { subtotal, total, disc, gst } = calcTotal();
+
+  // Build HTML preview
+  const shopName = shop.name || 'मेरी दुकान';
+  const promoTag = shop.promoTag ? `<div class="bill-promo">✨ ${shop.promoTag}</div>` : '';
+  let itemsHtml = validItems.map(i => `
+    <tr>
+      <td>${i.name}</td>
+      <td style="text-align:center">${i.qty}</td>
+      <td style="text-align:right">₹${i.price}</td>
+      <td style="text-align:right;font-weight:600">₹${(i.qty*i.price).toFixed(0)}</td>
+    </tr>
+  `).join('');
+
+  let upiHtml = shop.upi ? `<div style="margin-top:6px;font-size:0.78rem">UPI: <b>${shop.upi}</b></div>` : '';
+  let gstHtml = shop.gst ? `<div style="font-size:0.78rem;color:var(--muted)">GSTIN: ${shop.gst}</div>` : '';
+
+  const html = `
+    <div class="bill-header">
+      <div class="bill-shop-name">🏪 ${shopName}</div>
+      <div class="bill-shop-sub">${shop.address||''}</div>
+      <div class="bill-shop-sub">📞 ${shop.phone||''}</div>
+      ${gstHtml}
+      ${promoTag}
+    </div>
+    <div class="bill-customer">
+      <div><b>Customer:</b> ${name}<br><span style="font-size:0.78rem">📱 ${phone||'N/A'}</span></div>
+      <div style="text-align:right"><b>Bill #:</b> ${billno}<br><span style="font-size:0.78rem">${date}</span></div>
+    </div>
+    <table style="width:100%;border-collapse:collapse;font-size:0.83rem;margin:10px 0">
+      <thead><tr style="background:var(--primary-light)">
+        <th style="padding:6px;text-align:left">Item</th>
+        <th style="padding:6px;text-align:center">Qty</th>
+        <th style="padding:6px;text-align:right">Rate</th>
+        <th style="padding:6px;text-align:right">Total</th>
+      </tr></thead>
+      <tbody>${itemsHtml}</tbody>
+    </table>
+    <hr class="bill-divider">
+    <div class="bill-total-row"><span>Subtotal</span><span>₹${subtotal.toFixed(0)}</span></div>
+    ${disc > 0 ? `<div class="bill-total-row" style="color:var(--green)"><span>Discount (${disc}%)</span><span>-₹${(subtotal*disc/100).toFixed(0)}</span></div>` : ''}
+    ${gst > 0 ? `<div class="bill-total-row"><span>GST (${gst}%)</span><span>₹${((subtotal-subtotal*disc/100)*gst/100).toFixed(0)}</span></div>` : ''}
+    <div class="bill-total-row grand"><span>Grand Total</span><span>₹${total}</span></div>
+    <div style="margin-top:8px;font-size:0.8rem;color:var(--text2)">Payment: <b>${payment}</b></div>
+    ${notes ? `<div style="font-size:0.78rem;color:var(--muted);margin-top:4px">Note: ${notes}</div>` : ''}
+    ${upiHtml}
+    <div class="bill-footer">${shop.thanks || 'धन्यवाद! फिर आइएगा 🙏'}<br>${shopName}</div>
+  `;
+  document.getElementById('bill-preview-content').innerHTML = html;
+  document.getElementById('bill-preview-card').style.display = 'block';
+  document.getElementById('bill-preview-card').scrollIntoView({behavior:'smooth'});
+
+  // Save bill
+  const duedate = document.getElementById('b-duedate')?.value || '';
+  const udharnote = document.getElementById('b-udharnote')?.value || '';
+  const paidNow = parseFloat(document.getElementById('b-paid')?.value||0);
+
+  currentBill = { billno, customer: name, phone, date, total, payment, items: validItems.length, itemsList: validItems, notes, subtotal, disc, gst, duedate, udharnote, paidNow };
+  bills.push(currentBill);
+  localStorage.setItem('shop_bills', JSON.stringify(bills));
+
+  // Save udhar record if needed
+  if(payment === 'Udhar' || payment === 'Partial') {
+    const remaining = payment === 'Udhar' ? total : Math.max(0, total - paidNow);
+    if(remaining > 0) {
+      udhars.push({
+        id: 'U'+Date.now(), billno, customer: name, phone, date, duedate, amount: total,
+        paidNow: payment==='Partial' ? paidNow : 0,
+        remaining, note: udharnote || notes, status: 'pending', payments: []
+      });
+      localStorage.setItem('shop_udhars', JSON.stringify(udhars));
+    }
+  }
+
+  // Auto add/update customer
+  if(phone) {
+    const existing = customers.find(c => c.phone === phone);
+    if(!existing) { customers.push({name,phone,address:'',bday:'',totalBills:1,totalSpent:total,added:date}); }
+    else { existing.totalBills=(existing.totalBills||0)+1; existing.totalSpent=(existing.totalSpent||0)+total; }
+    localStorage.setItem('shop_custs', JSON.stringify(customers));
+  }
+
+  // Update stock
+  validItems.forEach(bi => {
+    const inv = inventory.find(i => i.name.toLowerCase() === bi.name.toLowerCase());
+    if(inv) { inv.qty = Math.max(0, inv.qty - bi.qty); }
+  });
+  localStorage.setItem('shop_inv', JSON.stringify(inventory));
+  renderBillHistory();
+}
+function clearBill() {
+  document.getElementById('b-name').value=''; document.getElementById('b-phone').value='';
+  document.getElementById('b-discount').value='0'; document.getElementById('b-gst').value='0';
+  document.getElementById('b-notes').value=''; document.getElementById('b-payment').value='Cash';
+  document.getElementById('bill-preview-card').style.display='none';
+  billItems=[];
+  const billNo = 'B' + String(bills.length + 1).padStart(4, '0');
+  document.getElementById('b-billno').value = billNo;
+  addItemRow(); addItemRow();
+}
+
+// ---- SEND MESSAGES ----
+function buildBillMessage() {
+  if(!currentBill) return '';
+  const s = shop.name || 'मेरी दुकान';
+  const tag = shop.promoTag ? `\n✨ ${shop.promoTag}` : '';
+  const items = currentBill.itemsList.map(i=>`  • ${i.name} x${i.qty} = ₹${(i.qty*i.price).toFixed(0)}`).join('\n');
+  return `🏪 *${s}*${shop.address?'\n📍 '+shop.address:''}${shop.phone?'\n📞 '+shop.phone:''}
+---------------------------
+*Bill #${currentBill.billno}*
+📅 Date: ${currentBill.date}
+👤 Customer: ${currentBill.customer}
+
+🛒 *Items:*
+${items}
+---------------------------
+💰 Total: *₹${currentBill.total}*
+💳 Payment: ${currentBill.payment}
+---------------------------
+${shop.thanks || 'धन्यवाद! फिर आइएगा 🙏'}${tag}`;
+}
+function sendWhatsApp() {
+  if(!currentBill) return;
+  const phone = currentBill.phone;
+  const msg = encodeURIComponent(buildBillMessage());
+  const num = phone ? '91' + phone : '';
+  window.open(`https://wa.me/${num}?text=${msg}`, '_blank');
+}
+function sendSMS() {
+  if(!currentBill) return;
+  const phone = currentBill.phone;
+  const msg = encodeURIComponent(`${shop.name||'दुकान'} Bill #${currentBill.billno} - Total: ₹${currentBill.total} - ${shop.thanks||'धन्यवाद!'}`);
+  window.open(`sms:${phone}?body=${msg}`, '_blank');
+}
+function printBill() {
+  const content = document.getElementById('bill-preview-content').innerHTML;
+  const win = window.open('','_blank');
+  win.document.write(`<html><head><title>Bill</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>body{font-family:'Poppins',sans-serif;padding:20px;max-width:400px;margin:0 auto}
+  .bill-promo{background:#2563eb;color:#fff;border-radius:8px;padding:6px 10px;text-align:center;font-size:0.78rem;margin:8px 0}
+  .bill-total-row{display:flex;justify-content:space-between;padding:3px 0}
+  .bill-total-row.grand{font-weight:800;font-size:1rem;border-top:2px solid #2563eb;padding-top:6px}
+  .bill-footer{text-align:center;margin-top:12px;padding-top:10px;border-top:2px dashed #e2e8f0;font-size:0.75rem;color:#94a3b8}
+  .bill-header{text-align:center;margin-bottom:14px;padding-bottom:12px;border-bottom:2px dashed #e2e8f0}
+  .bill-shop-name{font-size:1.3rem;font-weight:800;color:#2563eb}
+  table{width:100%;border-collapse:collapse}th,td{padding:5px;font-size:0.82rem}
+  </style></head><body>${content}<script>window.print();window.close();<\/script></body></html>`);
+}
+
+// ---- INVENTORY ----
+function addInventory() {
+  const name = document.getElementById('i-name').value.trim();
+  const qty = parseFloat(document.getElementById('i-qty').value)||0;
+  const price = parseFloat(document.getElementById('i-price').value)||0;
+  const cat = document.getElementById('i-cat').value;
+  const unit = document.getElementById('i-unit').value;
+  const alert = parseFloat(document.getElementById('i-alert').value)||5;
+  if(!name) { alert('Item का नाम डालो!'); return; }
+  const existing = inventory.find(i => i.name.toLowerCase()===name.toLowerCase());
+  if(existing) { existing.qty += qty; existing.price = price; }
+  else inventory.push({name,qty,price,cat,unit,alert,added:today()});
+  localStorage.setItem('shop_inv',JSON.stringify(inventory));
+  ['i-name','i-qty','i-price','i-alert'].forEach(id=>document.getElementById(id).value='');
+  renderInventory();
+  renderDashboard();
+}
+function renderInventory() {
+  const search = (document.getElementById('inv-search')?.value||'').toLowerCase();
+  const filtered = inventory.filter(i => i.name.toLowerCase().includes(search));
+  const tbody = document.getElementById('inv-body');
+  if(!filtered.length) { tbody.innerHTML='<tr><td colspan="6" class="empty-state">कोई item नहीं</td></tr>'; return; }
+  tbody.innerHTML = filtered.map((i,idx) => {
+    const status = i.qty <= 0 ? `<span class="badge badge-red">Out of Stock</span>`
+      : i.qty <= (i.alert||5) ? `<span class="badge badge-orange">Low Stock</span>`
+      : `<span class="badge badge-green">Available</span>`;
+    return `<tr>
+      <td><b>${i.name}</b><br><span style="font-size:0.72rem;color:var(--muted)">${i.unit}</span></td>
+      <td>${i.cat}</td>
+      <td><b>${i.qty}</b></td>
+      <td>₹${i.price}</td>
+      <td>${status}</td>
+      <td><button class="btn btn-outline btn-sm" onclick="deleteInv(${inventory.indexOf(i)})">🗑️</button></td>
+    </tr>`;
+  }).join('');
+}
+function deleteInv(idx) {
+  if(!confirm('Delete करें?')) return;
+  inventory.splice(idx,1);
+  localStorage.setItem('shop_inv',JSON.stringify(inventory));
+  renderInventory();
+}
+
+// ---- CUSTOMERS ----
+function addCustomer() {
+  const name = document.getElementById('c-name').value.trim();
+  const phone = document.getElementById('c-phone').value.trim();
+  if(!name||!phone) { alert('नाम और number डालो!'); return; }
+  if(customers.find(c=>c.phone===phone)) { alert('यह number already save है!'); return; }
+  customers.push({name,phone,address:document.getElementById('c-address').value.trim(),bday:document.getElementById('c-bday').value,totalBills:0,totalSpent:0,added:today()});
+  localStorage.setItem('shop_custs',JSON.stringify(customers));
+  ['c-name','c-phone','c-address','c-bday'].forEach(id=>document.getElementById(id).value='');
+  renderCustomers();
+}
+function renderCustomers() {
+  const search = (document.getElementById('cust-search')?.value||'').toLowerCase();
+  const filtered = customers.filter(c => c.name.toLowerCase().includes(search)||c.phone.includes(search));
+  document.getElementById('cust-count').textContent = customers.length;
+  const list = document.getElementById('cust-list');
+  if(!filtered.length) { list.innerHTML='<div class="empty-state">कोई customer नहीं</div>'; return; }
+  list.innerHTML = filtered.map((c,i) => `
+    <div class="cust-item">
+      <div>
+        <div class="cust-name">👤 ${c.name}</div>
+        <div class="cust-meta">📱 ${c.phone} ${c.address?'• 📍'+c.address:''}</div>
+        <div class="cust-meta">Bills: ${c.totalBills||0} • Spent: ₹${(c.totalSpent||0).toLocaleString('hi-IN')}</div>
+      </div>
+      <div class="cust-actions">
+        <button class="btn btn-whatsapp btn-sm" onclick="waCustomer('${c.phone}','${c.name}')">📱</button>
+        <button class="btn btn-sms btn-sm" onclick="smsCustomer('${c.phone}','${c.name}')">💬</button>
+        <button class="btn btn-red btn-sm" onclick="deleteCust(${customers.indexOf(c)})">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+}
+function waCustomer(phone,name) {
+  const msg = encodeURIComponent(`नमस्ते ${name} जी! 🙏\n${shop.name||'हमारी दुकान'} में आपका स्वागत है।\n${shop.promoTag||'Best Quality, Best Price!'}`);
+  window.open(`https://wa.me/91${phone}?text=${msg}`,'_blank');
+}
+function smsCustomer(phone,name) {
+  const msg = encodeURIComponent(`Namaste ${name}! ${shop.name||'Dukaan'} mein aapka swagat hai. ${shop.promoTag||''}`);
+  window.open(`sms:${phone}?body=${msg}`,'_blank');
+}
+function deleteCust(idx) {
+  if(!confirm('Delete करें?')) return;
+  customers.splice(idx,1);
+  localStorage.setItem('shop_custs',JSON.stringify(customers));
+  renderCustomers();
+}
+function closeModal() { document.getElementById('cust-modal').classList.remove('open'); }
+
+// ---- PROMOTION ----
+function updatePromoPreview() {
+  const title = document.getElementById('p-title')?.value || (shop.name||'आपकी दुकान');
+  const offer = document.getElementById('p-offer')?.value || 'Special Offer!';
+  const extra = document.getElementById('p-extra')?.value || '';
+  document.getElementById('pp-title').textContent = '🏪 ' + (title || shop.name || 'आपकी दुकान');
+  document.getElementById('pp-sub').textContent = extra || (shop.promoTag||'Special Offer आपके लिए!');
+  document.getElementById('pp-offer').textContent = offer || '🎉 Special Offer';
+}
+function buildPromoMsg() {
+  const title = document.getElementById('p-title').value||'Special Offer';
+  const offer = document.getElementById('p-offer').value||'';
+  const valid = document.getElementById('p-valid').value||'';
+  const extra = document.getElementById('p-extra').value||'';
+  return `🎉 *${title}*\n🏪 ${shop.name||'हमारी दुकान'}\n${shop.address?'📍 '+shop.address+'\n':''}${offer?'🔥 Offer: '+offer+'\n':''}${valid?'⏰ Valid Till: '+valid+'\n':''}${extra?extra+'\n':''}\n📞 ${shop.phone||''}\n${shop.promoTag||'Best Quality, Best Price!'}\n\nधन्यवाद! 🙏`;
+}
+function sendPromoWA() {
+  const msg = encodeURIComponent(buildPromoMsg());
+  const toAll = document.querySelector('input[name="promo-to"]:checked').value === 'all';
+  if(toAll) {
+    if(!customers.length) { alert('कोई customer नहीं है!'); return; }
+    customers.forEach((c,i) => setTimeout(()=>window.open(`https://wa.me/91${c.phone}?text=${msg}`,'_blank'), i*500));
+  } else {
+    const num = document.getElementById('p-singlenum').value.trim();
+    if(!num) { alert('Number डालो!'); return; }
+    window.open(`https://wa.me/91${num}?text=${msg}`,'_blank');
+  }
+}
+function sendPromoSMS() {
+  const msg = encodeURIComponent(buildPromoMsg().replace(/\*/g,''));
+  const toAll = document.querySelector('input[name="promo-to"]:checked').value === 'all';
+  if(toAll) {
+    if(!customers.length) { alert('कोई customer नहीं है!'); return; }
+    customers.forEach((c,i) => setTimeout(()=>window.open(`sms:${c.phone}?body=${msg}`,'_blank'), i*500));
+  } else {
+    const num = document.getElementById('p-singlenum').value.trim();
+    if(!num) { alert('Number डालो!'); return; }
+    window.open(`sms:${num}?body=${msg}`,'_blank');
+  }
+}
+
+// ---- BILL HISTORY ----
+function renderBillHistory() {
+  const list = document.getElementById('bill-history-list');
+  if(!bills.length) { list.innerHTML='<div class="empty-state">कोई bill नहीं</div>'; return; }
+  list.innerHTML = [...bills].reverse().map(b => `
+    <div class="history-item">
+      <div class="history-top"><span class="history-name">${b.customer}</span><span class="history-amount">₹${b.total.toLocaleString('hi-IN')}</span></div>
+      <div class="history-meta">Bill #${b.billno} • ${b.date} • ${b.payment} • ${b.items} items</div>
+    </div>
+  `).join('');
+}
+
+// ---- UDHAR / PAYMENT TOGGLE ----
+function toggleUdharFields() {
+  const val = document.getElementById('b-payment').value;
+  document.getElementById('udhar-fields').style.display = val==='Udhar' ? 'block' : 'none';
+  document.getElementById('partial-fields').style.display = val==='Partial' ? 'block' : 'none';
+  if(val==='Partial') calcPartial();
+}
+function calcPartial() {
+  const total = parseFloat(document.getElementById('s-total').textContent.replace('₹',''))||0;
+  const paid = parseFloat(document.getElementById('b-paid').value)||0;
+  const rem = Math.max(0, total - paid);
+  document.getElementById('b-remaining').value = rem;
+}
+
+// ---- UDHAR FUNCTIONS ----
+function renderUdhar() {
+  const search = (document.getElementById('udhar-search')?.value||'').toLowerCase();
+  const filter = document.getElementById('udhar-filter')?.value || 'all';
+  const todayStr = today();
+
+  let list = udhars.filter(u => {
+    const matchSearch = u.customer.toLowerCase().includes(search) || (u.phone||'').includes(search);
+    if(!matchSearch) return false;
+    if(filter==='pending') return u.status==='pending';
+    if(filter==='overdue') return u.status==='pending' && u.duedate && u.duedate < todayStr;
+    if(filter==='paid') return u.status==='paid';
+    return true;
+  });
+
+  // Stats
+  const pending = udhars.filter(u=>u.status==='pending');
+  const totalPending = pending.reduce((s,u)=>s+(u.remaining||0),0);
+  const uniquePeople = new Set(pending.map(u=>u.phone||u.customer)).size;
+  const recovered = udhars.filter(u=>u.status==='paid').reduce((s,u)=>s+u.amount,0);
+  const overdue = pending.filter(u=>u.duedate && u.duedate < todayStr).length;
+
+  document.getElementById('u-total').textContent = '₹'+totalPending.toLocaleString('hi-IN');
+  document.getElementById('u-count').textContent = uniquePeople;
+  document.getElementById('u-recovered').textContent = '₹'+recovered.toLocaleString('hi-IN');
+  document.getElementById('u-overdue').textContent = overdue;
+
+  const el = document.getElementById('udhar-list');
+  if(!list.length) { el.innerHTML='<div class="empty-state">कोई उधार नहीं 🎉</div>'; return; }
+
+  el.innerHTML = list.map(u => {
+    const isOverdue = u.status==='pending' && u.duedate && u.duedate < todayStr;
+    const borderColor = u.status==='paid' ? 'var(--green)' : isOverdue ? 'var(--red)' : 'var(--secondary)';
+    const statusBadge = u.status==='paid'
+      ? `<span class="badge badge-green">✅ चुका दिया</span>`
+      : isOverdue
+        ? `<span class="badge badge-red">⚠️ Overdue</span>`
+        : `<span class="badge badge-orange">🕐 Pending</span>`;
+    return `
+      <div style="background:#fff;border:2px solid ${borderColor};border-radius:12px;padding:14px;margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:6px">
+          <div>
+            <div style="font-weight:700;font-size:0.95rem">👤 ${u.customer}</div>
+            <div style="font-size:0.75rem;color:var(--muted)">📱 ${u.phone||'N/A'} • Bill #${u.billno||'Manual'} • ${u.date}</div>
+            ${u.duedate?`<div style="font-size:0.75rem;color:${isOverdue?'var(--red)':'var(--text2)'}">📅 Due: ${u.duedate}</div>`:''}
+            ${u.note?`<div style="font-size:0.78rem;color:var(--text2);margin-top:2px">📝 ${u.note}</div>`:''}
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:1.1rem;font-weight:800;color:${u.status==='paid'?'var(--green)':'var(--red)'}">₹${(u.remaining||0).toLocaleString('hi-IN')}</div>
+            <div style="font-size:0.72rem;color:var(--muted)">कुल: ₹${u.amount}</div>
+            ${statusBadge}
+          </div>
+        </div>
+        ${u.status==='pending' ? `
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px">
+          <button class="btn btn-green btn-sm" onclick="markUdharPaid('${u.id}')">✅ पैसे मिल गए</button>
+          <button class="btn btn-outline btn-sm" onclick="partialPayUdhar('${u.id}')">💰 कुछ दिए</button>
+          <button class="btn btn-whatsapp btn-sm" onclick="remindUdhar('${u.phone}','${u.customer}','${u.remaining}','${u.duedate||''}')">📱 Reminder भेजो</button>
+          <button class="btn btn-red btn-sm" onclick="deleteUdhar('${u.id}')">🗑️</button>
+        </div>` : ''}
+      </div>
+    `;
+  }).join('');
+}
+
+function addManualUdhar() {
+  const name = document.getElementById('ua-name').value.trim();
+  const phone = document.getElementById('ua-phone').value.trim();
+  const amount = parseFloat(document.getElementById('ua-amount').value)||0;
+  const due = document.getElementById('ua-due').value;
+  const note = document.getElementById('ua-note').value.trim();
+  if(!name||!amount) { alert('नाम और amount डालो!'); return; }
+  udhars.push({ id:'U'+Date.now(), billno:'Manual', customer:name, phone, date:today(), duedate:due, amount, remaining:amount, paidNow:0, note, status:'pending', payments:[] });
+  localStorage.setItem('shop_udhars', JSON.stringify(udhars));
+  ['ua-name','ua-phone','ua-amount','ua-due','ua-note'].forEach(id=>document.getElementById(id).value='');
+  renderUdhar();
+  renderDashboard();
+}
+
+function markUdharPaid(id) {
+  const u = udhars.find(x=>x.id===id);
+  if(!u) return;
+  if(!confirm(`₹${u.remaining} मिल गए ${u.customer} से?`)) return;
+  u.status='paid'; u.paidDate=today(); u.remaining=0;
+  localStorage.setItem('shop_udhars', JSON.stringify(udhars));
+  renderUdhar(); renderDashboard();
+}
+
+function partialPayUdhar(id) {
+  const u = udhars.find(x=>x.id===id);
+  if(!u) return;
+  const amt = parseFloat(prompt(`${u.customer} ने कितना दिया? (बाकी: ₹${u.remaining})`));
+  if(!amt||isNaN(amt)||amt<=0) return;
+  const paid = Math.min(amt, u.remaining);
+  u.remaining = Math.max(0, u.remaining - paid);
+  u.payments.push({date:today(), amount:paid});
+  if(u.remaining===0) u.status='paid';
+  localStorage.setItem('shop_udhars', JSON.stringify(udhars));
+  renderUdhar(); renderDashboard();
+}
+
+function deleteUdhar(id) {
+  if(!confirm('Delete करें?')) return;
+  udhars = udhars.filter(x=>x.id!==id);
+  localStorage.setItem('shop_udhars', JSON.stringify(udhars));
+  renderUdhar(); renderDashboard();
+}
+
+function remindUdhar(phone, name, remaining, duedate) {
+  const msg = encodeURIComponent(`नमस्ते ${name} जी! 🙏\n${shop.name||'हमारी दुकान'} से याद दिला रहे हैं।\n\n💰 आपका उधार बाकी है: *₹${remaining}*\n${duedate?'📅 Due Date: '+duedate+'\n':''}\nकृपया जल्दी भुगतान करें। धन्यवाद! 🙏`);
+  window.open(`https://wa.me/91${phone}?text=${msg}`,'_blank');
+}
+
+</script>
+</body>
+</html>
